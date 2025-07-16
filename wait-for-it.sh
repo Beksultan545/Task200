@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-host="$1"
-shift
-port="$1"
-shift
+set -e
 
-echo "Waiting for $host:$port..."
+host="$1"
+port="$2"
+shift 2
+
+echo "⏳ Waiting for $host:$port..."
 
 while ! nc -z "$host" "$port"; do
   sleep 1
 done
 
-echo "$host:$port is ready!"
+echo "✅ $host:$port is ready!"
 
 exec "$@"
