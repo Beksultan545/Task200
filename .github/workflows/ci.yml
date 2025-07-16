@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -28,28 +28,28 @@ jobs:
         ports: ["6379:6379"]
 
     steps:
-      - name: 🔄 Checkout code
+      - name: 🔄 Репоны жүктеу
         uses: actions/checkout@v3
 
-      - name: 🐍 Setup Python
+      - name: 🐍 Python орнату
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Тәуелділіктерді орнату
         run: |
-          pip install -r requirements.txt
+          pip install -r note_api/requirements.txt
           pip install pytest
 
-      - name: 🧪 Run tests
+      - name: 🧪 Тесттерді іске қосу
         env:
           DATABASE_URL: postgresql+asyncpg://beksultan:admin@localhost/mydb
           SECRET_KEY: supersecret
           CELERY_BROKER_URL: redis://localhost:6379/0
           CELERY_RESULT_BACKEND: redis://localhost:6379/0
         run: |
-          pytest
+          pytest note_api/tests/
 
-      - name: 🐳 Build Docker image
+      - name: 🐳 Docker образын жасау
         run: |
-          docker build . -t myapp:latest
+          docker build -t myapp:latest note_api/
